@@ -44,29 +44,11 @@ This project implements a multi-service architecture centered around a **Postgre
 ```
 
 ```
-                   ┌─────────────────────────┐
-                   │  React 19 Single Page   │
-                   │   Frontend (Port 5173)  │
-                   └────────────┬────────────┘
-                                │
-           ┌────────────────────┼────────────────────┐
-           │ REST API           │ REST API           │ REST API
-           ▼                    ▼                    ▼
- ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐
- │   Auth Service   │  │  Notes Service   │  │ Search & Embedding│
- │   (Port 8000)    │  │   (Port 8001)    │  │  Module (8002)   │
- └────────┬─────────┘  └────────┬─────────┘  └────────┬─────────┘
-          │                     │                     │
-          │ JWT Verify          │ CRUD / SQL          │ Vector / FTS
-          ▼                     ▼                     ▼
- ┌──────────────────────────────────────────────────────────────┐
- │             PostgreSQL 16 + pgvector Extension               │
- │         (User Data, Notes, Vector Embeddings & FTS)          │
- └──────────────────────────────────────────────────────────────┘
+
+<img width="1024" height="634" alt="image" src="https://github.com/user-attachments/assets/2e223d5e-07b3-4f52-b8c3-050f3404bea8" />
 
 ```
 
-```
 
 ---
 
