@@ -1,348 +1,139 @@
-# Intelligent Notes Platform - Полнофункциональная Система Управления Заметками с ИИ
-
-[![EN](https://img.shields.io/badge/lang-EN-blue)](README_EN.md)
-
-Современная, интеллектуальная платформа для управления заметками с интеграцией искусственного интеллекта. Система построена на микросервисной архитектуре с использованием FastAPI, React и Google Gemini AI, демонстрируя передовые практики разработки полнофункциональных веб-приложений.
-
-## 🏗️ Архитектура Системы
-
-Проект реализует **трехуровневую микросервисную архитектуру** с современным фронтендом:
-
-### Сервисы Backend
-
-1. **Auth Service** (Порт: `8000`)
-   - Аутентификация и авторизация пользователей
-   - Управление JWT токенами и ролевой системой
-   - Регистрация и управление пользователями
-   - Ролевой контроль доступа (RBAC): user, admin, creator
-
-2. **Notes Service** (Порт: `8001`)
-   - CRUD операции с заметками
-   - Проверка владения заметками
-   - Интеграция с Auth Service для аутентификации
-   - Временные метки создания и обновления
-
-3. **AI Service** (Порт: `8002`)
-   - Интеграция с Google Gemini AI
-   - Улучшение заметок по инструкциям пользователя
-   - Анализ всех заметок пользователя
-   - Генерация идей для новых заметок
-   - Локальные fallback алгоритмы при недоступности ИИ
-
-### Frontend Application
-
-4. **React Frontend** (Порт: `5173`)
-   - Современный SPA на React 19 с React Router
-   - Адаптивный интерфейс с Tailwind CSS
-   - Интерактивный ИИ-помощник для заметок
-   - Аутентификация с JWT токенами
-   - Реальное время обновления заметок
-
-### Межсервисное Взаимодействие
-
-- **Notes ↔ Auth**: HTTP запросы для проверки токенов
-- **Frontend ↔ All Services**: REST API через Axios
-- **AI Service ↔ Gemini**: Внешний API для обработки ИИ
-- **Docker Network**: Внутренняя сеть для коммуникации сервисов
-
-## 🤖 Искусственный Интеллект
-
-### Интеграция с Google Gemini AI
-
-Система включает полнофункциональный ИИ-сервис, предоставляющий:
-
-#### Улучшение Заметок
-- **Стилистическое улучшение**: Форматирование и структурирование текста
-- **Сокращение**: Автоматическое сжатие длинных заметок
-- **Перефразирование**: Переписывание текста с сохранением смысла
-- **Исправление ошибок**: Проверка грамматики и орфографии
-- **Профессионализация**: Преобразование в деловой стиль
-- **Упрощение**: Адаптация сложного текста для лучшего понимания
-
-#### Анализ Заметок
-- Выявление основных тем в коллекции заметок
-- Предоставление персонализированных советов
-- Рекомендации по организации и структурированию
-
-#### Генерация Идей
-- Создание новых идей на основе существующих заметок
-- Предложения для развития тем
-- Креативные подсказки для продолжения работы
-
-#### Технические Особенности
-- **Fallback система**: Локальные алгоритмы при недоступности ИИ
-- **Безопасность**: Фильтрация контента и защита от вредоносного ввода
-- **Производительность**: Оптимизированные запросы к Gemini API
-- **Пользовательский опыт**: Интуитивный интерфейс с предустановленными командами
-
-## 🔐 Аутентификация и Авторизация
-
-### Процесс Аутентификации
-
-1. **Регистрация**: Пользователи создают аккаунт с именем пользователя, паролем и возрастом
-2. **Вход**: Аутентификация через форму входа с получением JWT токена
-3. **Защищенный доступ**: Все операции требуют валидный Bearer токен
-4. **Автоматический выход**: При истечении токена или ошибках аутентификации
-
-### Ролевая Система (RBAC)
-
-- **`user`** (по умолчанию): Управление собственными заметками
-- **`admin`**: Просмотр всех пользователей и их информации
-- **`creator`**: Полные права, включая назначение администраторов
-
-### Функции Безопасности
-
-- **Хеширование паролей**: bcrypt через passlib
-- **JWT токены**: Статeless аутентификация с HS256
-- **Межсервисная проверка**: Централизованная валидация через Auth Service
-- **OAuth2 Flow**: Стандартизированный процесс аутентификации
-- **Проверка владения**: Пользователи видят только свои заметки
-
-## 💻 Frontend Возможности
-
-### Современный React Interface
-
-#### Основные Функции
-- **Адаптивный дизайн**: Работает на всех устройствах
-- **Реальное время**: Мгновенное обновление заметок
-- **Интуитивный UX**: Простое создание, редактирование и удаление
-- **Визуальная обратная связь**: Анимации и уведомления о статусе
-
-#### ИИ-Помощник
-- **Модальное окно**: Полнофункциональный интерфейс для работы с ИИ
-- **Три режима**: Улучшение, анализ, генерация идей
-- **Предустановленные команды**: Быстрый доступ к популярным функциям
-- **Сравнение версий**: Визуальное сравнение оригинала и улучшенной версии
-- **Применение изменений**: Одним кликом обновить заметку
-
-#### Технические Особенности
-- **React 19**: Новейшая версия с улучшенной производительностью
-- **React Router**: SPA навигация с защищенными маршрутами
-- **Axios**: HTTP клиент с автоматическими заголовками авторизации
-- **Tailwind CSS**: Утилитарный CSS для быстрой стилизации
-- **Vite**: Современный сборщик для быстрой разработки
-
-## 📋 API Endpoints
-
-### Auth Service (`/users`, `/auth`)
-
-#### Управление Пользователями
-- `POST /users/register` - Регистрация нового пользователя
-- `POST /users/login` - Вход и получение JWT токена
-- `GET /users/users` - Список всех пользователей (Admin+)
-- `GET /users/users/by-username/{username}` - Поиск по имени (Admin+)
-- `POST /users/users/{user_id}/make-admin` - Назначить администратора (Creator)
-
-#### Аутентификация
-- `GET /auth/verify-token` - Проверка валидности токена (для сервисов)
-
-### Notes Service (`/notes`)
-
-#### CRUD Операции
-- `GET /notes/` - Получить все заметки пользователя
-- `GET /notes/{note_id}` - Получить конкретную заметку
-- `POST /notes/` - Создать новую заметку
-- `PUT /notes/{note_id}` - Обновить заметку
-- `DELETE /notes/{note_id}` - Удалить заметку
-
-### AI Service (`/ai`)
-
-#### ИИ Функции
-- `POST /ai/improve-note` - Улучшить заметку по инструкции
-- `POST /ai/analyze-notes` - Анализ всех заметок пользователя
-- `POST /ai/generate-idea` - Генерация новых идей
-- `GET /ai/health` - Проверка работоспособности ИИ сервиса
-
-## 🛠️ Технологический Стек
-
-### Backend
-- **FastAPI**: Современный Python веб-фреймворк
-- **SQLAlchemy 2.0**: ORM с поддержкой типов
-- **SQLite**: Легковесная база данных
-- **Pydantic**: Валидация данных и сериализация
-- **PyJWT**: Работа с JWT токенами
-- **passlib**: Безопасное хеширование паролей
-- **Google Generative AI**: Интеграция с Gemini
-
-### Frontend
-- **React 19**: Современная библиотека UI
-- **React Router DOM**: Клиентская маршрутизация
-- **Axios**: HTTP клиент для API запросов
-- **Tailwind CSS**: Утилитарный CSS фреймворк
-- **Vite**: Быстрый сборщик и dev сервер
-
-### DevOps & Deployment
-- **Docker**: Контейнеризация сервисов
-- **Docker Compose**: Оркестрация многосервисного приложения
-- **Uvicorn**: ASGI сервер для FastAPI
-
-## 🚀 Быстрый Старт
-
-### Требования
-- Docker и Docker Compose
-- Python 3.8+ (для локальной разработки)
-- Node.js 18+ (для фронтенда)
-
-### Запуск через Docker Compose
-
-```bash
-# Клонировать репозиторий
-git clone <https://github.com/Dan5365/Secure-Notes-API-FastAPI->
-cd Secure-Notes-API-FastAPI-
-
-# Запустить все сервисы
-docker-compose up --build
-
-# Доступ к приложению
-# Frontend: http://localhost:5173
-# Auth API: http://localhost:8000/docs
-# Notes API: http://localhost:8001/docs
-# AI API: http://localhost:8002/docs
-```
-
-### Локальная Разработка
-
-#### Backend Services
-
-```bash
-# Auth Service
-cd auth_service
-pip install -r requirements.txt
-python main.py  # Порт 8000
-
-# Notes Service
-cd notes_service
-pip install -r requirements.txt
-python main.py  # Порт 8001
-
-# AI Service
-cd ai_service
-pip install -r requirements.txt
-python main.py  # Порт 8002
-```
-
-#### Frontend
-
-```bash
-cd frontend
-npm install
-npm run dev  # Порт 5173
-```
-
-## 📱 Использование Приложения
-
-### 1. Регистрация и Вход
-1. Откройте http://localhost:5173
-2. Зарегистрируйтесь или войдите в систему
-3. Получите доступ к панели управления заметками
-
-### 2. Управление Заметками
-- **Создание**: Нажмите "Create New Note"
-- **Редактирование**: Кликните "Edit" на любой заметке
-- **Удаление**: Используйте кнопку "Delete"
-- **ИИ-помощь**: Нажмите "AI" для улучшения заметки
-
-### 3. Работа с ИИ-Помощником
-1. Выберите заметку и нажмите кнопку "AI"
-2. Выберите режим: Улучшение, Анализ или Идеи
-3. Для улучшения введите инструкцию или выберите готовую
-4. Просмотрите результат и примените изменения
-
-## 🔧 Конфигурация
-
-### Переменные Окружения
-
-```bash
-# AI Service
-GEMINI_API_KEY=your_gemini_api_key_here
-
-# Auth Service (для продакшена)
-SECRET_KEY=your_secret_key_here
-ALGORITHM=HS256
-
-# Notes Service
-AUTH_SERVICE_URL=http://auth-service:8000
-```
-
-### Настройка ИИ
-
-1. Получите API ключ от Google AI Studio
-2. Замените `GEMINI_API_KEY` в `ai_service/ai_service.py`
-3. При необходимости измените модель в `MODEL_NAME`
-
-## 📁 Структура Проекта
-
-```
-Intelligent-Notes-Platform/
-├── auth_service/           # Сервис аутентификации
-│   ├── main.py            # Точка входа FastAPI
-│   ├── auth.py            # JWT логика
-│   ├── crud.py            # Операции с БД
-│   ├── models.py          # SQLAlchemy модели
-│   ├── schemas.py         # Pydantic схемы
-│   └── routers/           # API маршруты
-├── notes_service/         # Сервис заметок
-│   ├── main.py            # Точка входа FastAPI
-│   ├── auth_client.py     # Клиент для Auth Service
-│   ├── crud.py            # Операции с БД
-│   ├── models.py          # SQLAlchemy модели
-│   └── routers/           # API маршруты
-├── ai_service/            # ИИ сервис
-│   ├── main.py            # Точка входа FastAPI
-│   └── ai_service.py      # Gemini AI интеграция
-├── frontend/              # React приложение
-│   ├── src/
-│   │   ├── pages/         # Компоненты страниц
-│   │   ├── services/      # API клиенты
-│   │   └── App.jsx        # Главный компонент
-│   ├── package.json       # Зависимости Node.js
-│   └── vite.config.js     # Конфигурация Vite
-└── docker-compose.yml     # Оркестрация сервисов
-```
-
-## 🧪 Тестирование
-
-### HTTP Тесты
-- `auth_service/test_main.http` - Тесты Auth API
-- `notes_service/test_main.http` - Тесты Notes API
-
-### Ручное Тестирование
-1. Используйте Swagger UI для каждого сервиса
-2. Тестируйте через фронтенд интерфейс
-3. Проверьте ИИ функции с различными инструкциями
-
-## 🔒 Безопасность
-
-### Текущие Меры
-- Хеширование паролей с bcrypt
-- JWT токены для статeless аутентификации
-- Валидация входных данных через Pydantic
-- CORS настройки для безопасных запросов
-- Проверка владения ресурсов
-
-### Рекомендации для Продакшена
-- Использовать переменные окружения для секретов
-- Настроить HTTPS
-- Добавить rate limiting
-- Реализовать логирование и мониторинг
-- Использовать продакшен БД (PostgreSQL)
-- Настроить backup и восстановление
-
-## 🤝 Вклад в Проект
-
-1. Fork репозитория
-2. Создайте feature branch
-3. Внесите изменения с тестами
-4. Отправьте Pull Request
-
-## 📄 Лицензия
-
-Проект предоставляется для образовательных и демонстрационных целей.
-
-## 📧 Контакты
-
-Для вопросов и предложений создайте issue в репозитории.
+```markdown
+# Intelligent Personal Knowledge Base — Semantic Search Module
+
+## 📌 Project Overview
+* **English:** Development of a Semantic Search Module for a Personal Knowledge Base Based on PostgreSQL/pgvector with an Investigation into Search Strategy Effectiveness
+* **Қазақша:** PostgreSQL/pgvector негізіндегі дербес білім базасына арналған семантикалық іздеу модулін әзірлеу және іздеу стратегияларының тиімділігін зерттеу
+* **Русский:** Разработка модуля семантического поиска для персональной базы знаний на основе PostgreSQL/pgvector и исследование эффективности стратегий поиска
 
 ---
 
-**Создано с ❤️ используя FastAPI, React и Google Gemini AI**
+## 👥 Team Members & Responsibilities
+* **Adilbekuly Daniyal** (SE-2407) — *Lead Backend & Database Architect*
+  * PostgreSQL + `pgvector` schema design, HNSW/IVFFlat vector indexing, hybrid search algorithm implementation.
+* **Tapishev Daniyal** (SE-2407) — *Backend & Frontend Engineer*
+  * REST API development (Notes Service), React UI implementation, search strategy switcher, E2E & unit testing.
+* **Marat Erkanat** (SE-2407) — *Integration, QA & Benchmarking Engineer*
+  * Docker infrastructure, CI/CD pipelines, search strategy benchmarking (Precision@K, Recall@K, MRR), YouTrack management.
+
+**Academic Supervisor:** Aitmukhanbetova Elvira Aitmukhanbetkyzy
+
+---
+
+## 🎯 Problem Statement & Core Objectives
+Modern personal knowledge bases (PKB) accumulate large volumes of unstructured notes and documents. Traditional keyword-based search (sparse retrieval) struggles with context, synonyms, and semantic meaning. 
+
+This project implements a multi-service architecture centered around a **PostgreSQL/pgvector** database to provide an intelligent hybrid search engine. The project evaluates three distinct retrieval strategies:
+1. **Sparse Retrieval:** Full-Text Search (FTS / BM25) in PostgreSQL.
+2. **Dense Retrieval:** Vector embeddings and similarity search via `pgvector` (Cosine / L2 distance with HNSW indexes).
+3. **Hybrid Retrieval:** Reciprocal Rank Fusion (RRF) combining Sparse and Dense scores.
+
+---
+
+## 🛠 Tech Stack
+* **Database & Vector Search:** PostgreSQL 16+, `pgvector` extension
+* **Backend Framework:** Python 3.11+, FastAPI, SQLAlchemy 2.0, Pydantic v2
+* **ML & Embeddings:** HuggingFace `sentence-transformers` (`all-MiniLM-L6-v2`)
+* **Frontend:** React 19, Tailwind CSS, Vite
+* **DevOps & Testing:** Docker, Docker Compose, pytest, YouTrack, GitHub Actions
+
+---
+
+## 🏗 Microservice Architecture
+
+
+```
+
+```
+                   ┌─────────────────────────┐
+                   │  React 19 Single Page   │
+                   │   Frontend (Port 5173)  │
+                   └────────────┬────────────┘
+                                │
+           ┌────────────────────┼────────────────────┐
+           │ REST API           │ REST API           │ REST API
+           ▼                    ▼                    ▼
+ ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐
+ │   Auth Service   │  │  Notes Service   │  │ Search & Embedding│
+ │   (Port 8000)    │  │   (Port 8001)    │  │  Module (8002)   │
+ └────────┬─────────┘  └────────┬─────────┘  └────────┬─────────┘
+          │                     │                     │
+          │ JWT Verify          │ CRUD / SQL          │ Vector / FTS
+          ▼                     ▼                     ▼
+ ┌──────────────────────────────────────────────────────────────┐
+ │             PostgreSQL 16 + pgvector Extension               │
+ │         (User Data, Notes, Vector Embeddings & FTS)          │
+ └──────────────────────────────────────────────────────────────┘
+
+```
+
+```
+
+---
+
+## 🔗 Project Management & Useful Links
+* **YouTrack Board:** [PKB YouTrack Project Workspace](https://youtrack.jetbrains.com/) *(Замените на вашу прямую ссылку)*
+* **API Documentation:**
+  * Auth Service API: `http://localhost:8000/docs`
+  * Notes Service API: `http://localhost:8001/docs`
+  * Search Engine API: `http://localhost:8002/docs`
+
+---
+
+## 📚 Open Access References & Literature Review Sources
+
+All referenced literature sources are freely accessible (Open Access / ArXiv):
+
+1. **pgvector Repository & Docs:** [PostgreSQL Vector Similarity Search Extension](https://github.com/pgvector/pgvector)
+2. **Dense Passages Retrieval (DPR):** [Karpukhin et al. (2020) - Dense Passage Retrieval for Open-Domain Question Answering (ArXiv)](https://arxiv.org/abs/2004.04906)
+3. **Reciprocal Rank Fusion (RRF):** [Cormack et al. - Reciprocal Rank Fusion outperforms Condorcet and individual Rank Learning Methods (SIGIR Open)](https://plapante.faculty.uconn.edu/posts/2023-11-26-rrf.html)
+4. **Sentence-BERT:** [Reimers & Gurevych (2019) - Sentence-BERT: Sentence Embeddings using Siamese BERT-Networks (ArXiv)](https://arxiv.org/abs/1908.10084)
+5. **HNSW Indexing:** [Malkov & Yashunin (2018) - Efficient and robust approximate nearest neighbor search using Hierarchical Navigable Small World graphs (IEEE/ArXiv)](https://arxiv.org/abs/1603.09320)
+6. **BM25 Search Algorithm:** [Robertson & Zaragoza (2009) - The Probabilistic Relevance Framework: BM25 and Beyond (Open Access PDF)](https://www.ftweb.org/pdf/bm25.pdf)
+7. **Vector Databases in Practice:** [Pan et al. (2023) - Survey on Vector Database Management Systems (ArXiv)](https://arxiv.org/abs/2310.11703)
+8. **Information Retrieval Evaluation:** [Manning, Raghavan, Schütze - Introduction to Information Retrieval (Free Online Textbook by Stanford)](https://nlp.stanford.edu/IR-book/information-retrieval-book.html)
+
+---
+
+## 🚀 Quick Start & Local Setup
+
+### Prerequisites
+* Docker Engine 24.0+ & Docker Compose 2.0+
+* Git
+
+### Installation & Run
+
+1. **Clone the repository:**
+   ```bash
+   git clone [https://github.com/Dan5365/Secure-Notes-API-FastAPI-.git](https://github.com/Dan5365/Secure-Notes-API-FastAPI-.git)
+   cd Secure-Notes-API-FastAPI-
+
+```
+
+2. **Start system via Docker Compose:**
+```bash
+docker-compose up --build -d
+
+```
+
+
+3. **Verify running services:**
+* Frontend: `http://localhost:5173`
+* Backend API: `http://localhost:8001/docs`
+
+
+
+```
+
+***
+
+### Что сделать прямо сейчас:
+1. Замените содержимое вашего файла `README.md` в корнях репозитория на этот текст.
+2. Вставьте туда вашу настоящую ссылку на **YouTrack** (когда создадите проект).
+3. Сделайте коммит и отправьте изменения на GitHub:
+   ```bash
+   git add README.md
+   git commit -m "PKB-1: Update README.md with project scope, pgvector architecture and literature links"
+   git push origin main
+
+```
