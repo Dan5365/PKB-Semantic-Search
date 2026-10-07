@@ -1,4 +1,3 @@
-```markdown
 # Intelligent Personal Knowledge Base — Semantic Search Module
 
 ## 📌 Project Overview
@@ -136,4 +135,3 @@ docker-compose up --build -d
    git commit -m "PKB-1: Update README.md with project scope, pgvector architecture and literature links"
    git push origin main
 
-```
